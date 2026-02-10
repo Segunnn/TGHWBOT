@@ -49,7 +49,7 @@ class DailyPoster:
             try:
                 now = datetime.now()
                 
-                if now.hour == 188:
+                if now.hour == 17:
                     genocide_outdated_hws()
                     # Проверяем, что сегодня еще не отправляли
                     if last_post_day != now.date():
