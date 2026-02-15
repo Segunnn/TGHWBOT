@@ -1,4 +1,4 @@
-from aiogram import F, Router
+from aiogram import F, Router, Bot
 from aiogram.types import CallbackQuery, Message
 from aiogram.filters import Command
 from aiogram.utils.keyboard import InlineKeyboardBuilder
@@ -16,15 +16,6 @@ router = Router()
 @router.message(F.text == LIST_DZ)
 async def add_hw_init(message: Message):
     hws = get_active_hws()
-    # Инициализируем пустые данные
-    #hws_data = {
-    #    "object": hws[1],
-    #    "description": hws[2],
-    #    "files": len(eval(hws[3])),
-    #    "created_at": hws[4],
-    #    "ends_at": hws[5],
-    #    "menu_msg_id": callback.message.message_id
-    #}
     text = "Для просмотра файлов нажми на кнопку с соответствующим ID\n"
     ids_of_hws_with_files = []
     

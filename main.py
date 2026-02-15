@@ -49,7 +49,7 @@ class DailyPoster:
             try:
                 now = datetime.now()
                 
-                if now.hour == 17:
+                if now.hour == 18 and now.weekday() != 6:
                     genocide_outdated_hws()
                     # Проверяем, что сегодня еще не отправляли
                     if last_post_day != now.date():
@@ -67,6 +67,15 @@ class DailyPoster:
         """Отправляет ежедневное сообщение"""
         try:
             text = "ДЗ на завтра:"
+            if get_active_hws() == []:
+                await self.bot.send_message(
+                    chat_id=FORUM_ID,
+                    message_thread_id=TOPIC_ID, 
+                    text="*На завтра ДЗ в базе данных отсутствует*",
+                    parse_mode="MarkdownV2",
+                    disable_notification=True
+                )
+                
             for hw in get_active_hws():
                 if days_until_deadline(hw[5]) == 1:
                     text = text + DAILY_HW_TEXT.format(hw[1].capitalize(), hw[0], len(eval(hw[3])), hw[2], hw[4], hw[5])
