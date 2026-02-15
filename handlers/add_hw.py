@@ -115,7 +115,9 @@ async def process_startdate(message: Message, state: FSMContext):
 @router.callback_query(F.data == "add_hw:enddate")
 async def ask_startdate(callback: CallbackQuery, state: FSMContext):
     await state.set_state(HWStates.waiting_for_enddate)
-    await callback.answer("Дедлайн до? Формат: 11.09.01(день.месяц.год)")
+    #await callback.answer("Дедлайн до? Формат: 11.09.01(день.месяц.год)")
+    msg = await callback.bot.send_message(callback.from_user.id, "Дедлайн до? Формат: 11.09.01(день.месяц.год) Либо undefined если хз")
+    await state.update_data(info_msg_id=msg.message_id)
 
 @router.message(HWStates.waiting_for_enddate)
 async def process_startdate(message: Message, state: FSMContext):
@@ -124,7 +126,9 @@ async def process_startdate(message: Message, state: FSMContext):
         await message.delete()
         await update_menu_text(message, state)
         await state.set_state(None)
+        await message.bot.delete_message(message.from_user.id, await state.get_value("info_msg_id"))
     else:
+        await message.bot.delete_message(message.from_user.id, await state.get_value("info_msg_id"))
         temp_msg = await message.answer("❌ НЕПРАВИЛЬНЫЙ ФОРМАТ. Попробуйте снова")
         await message.delete()
         await state.set_state(None)

@@ -23,9 +23,9 @@ def validate_object(object: str) -> bool:
     return object.lower().strip() in OBJECTS
 
 def validate_date(date: str) -> bool:
-    return (len(date) == 8) and (date[0].isdigit() and date[1].isdigit() and date[2] == '.' \
+    return ((len(date) == 8) and (date[0].isdigit() and date[1].isdigit() and date[2] == '.' \
             and date[3].isdigit() and date[4].isdigit() and date[5] == '.' \
-                and date[6].isdigit() and date[7].isdigit())
+                and date[6].isdigit() and date[7].isdigit())) or date == "undefined"
 
 def add_hw(object: str, description: str | None, files: list[str] | tuple[str], start_date: str, end_date: str) -> bool:
     """

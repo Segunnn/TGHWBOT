@@ -77,7 +77,7 @@ class DailyPoster:
                 )
                 
             for hw in get_active_hws():
-                if days_until_deadline(hw[5]) == 1:
+                if days_until_deadline(hw[5]) == 1 or hw[5] == "undefined":
                     text = text + DAILY_HW_TEXT.format(hw[1].capitalize(), hw[0], len(eval(hw[3])), hw[2], hw[4], hw[5])
             text += "Для подробностей обращаться к боту в лс"
             await self.bot.send_message(
