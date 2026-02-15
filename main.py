@@ -44,6 +44,7 @@ class DailyPoster:
         """Запускает ежедневную отправку сообщений"""
         self.is_running = True
         last_post_day = None  # Чтобы не отправлять несколько раз в один день
+        print("Daily poster is active")
         
         while self.is_running:
             try:
