@@ -32,7 +32,7 @@ async def main():
 def genocide_outdated_hws():
     hws = get_active_hws()
     for hw in hws:
-        if days_until_deadline(hw[5]) < 1:
+        if days_until_deadline(hw[5]) == 1:
             mark_as_outdated(hw[0])
 
 class DailyPoster:

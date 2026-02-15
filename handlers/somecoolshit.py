@@ -11,6 +11,8 @@ def days_until_deadline(end_date_str: str) -> int:
         int: количество дней до дедлайна
         (отрицательное число, если дедлайн уже прошел)
     """
+    if end_date_str == "undefined":
+        return '?'
     try:
         # Преобразуем строку в объект datetime
         end_date = datetime.strptime(end_date_str, "%d.%m.%y").date()
