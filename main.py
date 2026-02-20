@@ -79,10 +79,11 @@ class DailyPoster:
                 await self.bot.send_message(
                     chat_id=FORUM_ID,
                     message_thread_id=TOPIC_ID, 
-                    text="*На завтра ДЗ в базе данных отсутствует*",
+                    text=f"*На завтра ДЗ в базе данных отсутствует*\n Текущая неделя: {week.capitalize()}",
                     parse_mode="MarkdownV2",
                     disable_notification=True
                 )
+                return 1
                 
             for hw in get_active_hws():
                 if days_until_deadline(hw[5]) == 1 or hw[5] == "undefined":
