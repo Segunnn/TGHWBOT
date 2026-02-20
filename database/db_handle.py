@@ -1,7 +1,10 @@
 import sqlite3
+import json
+import os
+from pathlib import Path
+
 #from ..constants import OBJECTS
 OBJECTS = ("физра", "русский", "физика", "математика", "литература", "химия", "английский", "история", "информатика", "биология", "обществознание", "география", "обзр", "другое")
-
 
 conn = sqlite3.connect('database/hws.db')
 cur = conn.cursor()
@@ -17,7 +20,6 @@ CREATE TABLE IF NOT EXISTS hws (
     status TEXT
 )
 ''')
-conn.commit()
 
 def validate_object(object: str) -> bool:
     return object.lower().strip() in OBJECTS
@@ -131,3 +133,33 @@ def get_hws_by_object(object_name: str, only_active: bool = True):
     else:
         cur.execute("SELECT * FROM hws WHERE object = ?", (object_name,))
     return cur.fetchall()
+
+class Week:
+    def __init__(self, storage_file='.week.json'):
+        self.storage_file = storage_file
+        self.current_week = self._load_state()
+    
+    def _load_state(self):
+        """Загружаем состояние из файла"""
+        if os.path.exists(self.storage_file):
+            try:
+                with open(self.storage_file, 'r') as f:
+                    data = json.load(f)
+                    return data.get('week', 'числитель')
+            except:
+                return 'числитель'
+        return 'числитель'
+    
+    def _save_state(self):
+        """Сохраняет состояние в файл"""
+        with open(self.storage_file, 'w') as f:
+            json.dump({'week': self.current_week}, f)
+    
+    def next_week(self):
+        """Переключает на следующую неделю и сохраняет"""
+        self.current_week = 'знаменатель' if self.current_week == 'числитель' else 'числитель'
+        self._save_state()
+        return self.current_week
+    
+    def get_current_week(self) -> str:
+        return self.current_week

@@ -7,7 +7,7 @@ from aiogram import Bot, Dispatcher
 from config import config
 from handlers import routers, days_until_deadline
 from constants import FORUM_ID, TOPIC_ID, DAILY_HW_TEXT
-from database import get_active_hws, mark_as_outdated
+from database import get_active_hws, mark_as_outdated, Week
 from middlwares import PrivateChatMiddleware
 
 
@@ -44,19 +44,24 @@ class DailyPoster:
         """Запускает ежедневную отправку сообщений"""
         self.is_running = True
         last_post_day = None  # Чтобы не отправлять несколько раз в один день
-        print("Daily poster is active")
+        logging.info("Daily poster is active")
+        msc_tz = timezone(timedelta(hours=3))
         
         while self.is_running:
             try:
-                now = datetime.now()
+                now = datetime.now(msc_tz)
                 
-                if now.hour == 18 and now.weekday() != 6:
+                if (now.hour == 18 or last_post_day != now.date) and now.weekday() != 5:
                     genocide_outdated_hws()
                     # Проверяем, что сегодня еще не отправляли
                     if last_post_day != now.date():
                         await self.send_daily_message()
                         last_post_day = now.date()
-                        print("Ежедневное сообщение было отправлено")
+                        logging.info("Ежедневное сообщение было отправлено")
+                
+                elif now.weekday() == 5:
+                    wek = Week()
+                    wek.next_week()
                 
                 await asyncio.sleep(300)
                 
@@ -67,7 +72,9 @@ class DailyPoster:
     async def send_daily_message(self):
         """Отправляет ежедневное сообщение"""
         try:
-            text = "ДЗ на завтра:"
+            wek = Week()
+            week = Week.get_current_week()
+            text = f"Текущая неделя: {week.capitalize()} ДЗ на завтра:"
             if get_active_hws() == []:
                 await self.bot.send_message(
                     chat_id=FORUM_ID,
