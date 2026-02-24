@@ -73,7 +73,7 @@ class DailyPoster:
         """Отправляет ежедневное сообщение"""
         try:
             wek = Week()
-            week = wek.get_current_week()
+            week = wek.get_week()
             text = f"Текущая неделя: {week.capitalize()} ДЗ на завтра:"
             if get_active_hws() == []:
                 await self.bot.send_message(

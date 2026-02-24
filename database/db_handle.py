@@ -135,31 +135,22 @@ def get_hws_by_object(object_name: str, only_active: bool = True):
     return cur.fetchall()
 
 class Week:
-    def __init__(self, storage_file='.week.json'):
-        self.storage_file = storage_file
-        self.current_week = self._load_state()
-    
-    def _load_state(self):
-        """Загружаем состояние из файла"""
+    def __init__(self) -> None:
+        self.storage_file = 'databse/.week.txt'
+        self.current_week = self.get_week()
+
+    def get_week(self) -> str:
         if os.path.exists(self.storage_file):
-            try:
-                with open(self.storage_file, 'r') as f:
-                    data = json.load(f)
-                    return data.get('week', 'числитель')
-            except:
-                return 'числитель'
-        return 'числитель'
+            with open(self.storage_file, 'r') as f:
+                data = f.read()
+                return str(data)
+        else:
+            return 'знаменатель'
     
-    def _save_state(self):
-        """Сохраняет состояние в файл"""
+    def _set_week(self):
         with open(self.storage_file, 'w') as f:
-            json.dump({'week': self.current_week}, f)
-    
+            f.write(self.current_week)
+
     def next_week(self):
-        """Переключает на следующую неделю и сохраняет"""
         self.current_week = 'знаменатель' if self.current_week == 'числитель' else 'числитель'
-        self._save_state()
-        return self.current_week
-    
-    def get_current_week(self) -> str:
-        return self.current_week
+        self._set_week()
