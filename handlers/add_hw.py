@@ -5,6 +5,8 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 import asyncio
 
+from datetime import datetime
+
 from constants import MAIN_MENU_TEXT, OBJECTS, ADD_DZ
 from database import validate_date, add_hw
 from keyboards import get_add_hw_kb, get_objects_kb
@@ -94,18 +96,31 @@ async def process_description(message: Message, state: FSMContext):
 @router.callback_query(F.data == "add_hw:startdate")
 async def ask_startdate(callback: CallbackQuery, state: FSMContext):
     await state.set_state(HWStates.waiting_for_startdate)
-    await callback.answer("Когда задание было задано? Формат: 11.09.01(день.месяц.год)")
+    #await callback.answer("Когда задание было задано? Формат: 11.09.01(день.месяц.год)")
+    kb = InlineKeyboardBuilder()
+    kb.button(text="Сегодня", callback_data="add_hw:startdate:today")
+    msg = await callback.bot.send_message(callback.from_user.id, "Когда дз было задано? Формат: 11.09.01(день.месяц.год) Либо undefined если хз", reply_markup=kb.as_markup())
+    await state.update_data(info_msg_id=msg.message_id)
+
+@router.callback_query(F.data == "add_hw:startdate:today")
+async def today_startday(callback: CallbackQuery, state: FSMContext):
+    await state.update_data(created_at=datetime.strftime("%d.%m.%y"))
+    await message.bot.delete_message(message.from_user.id, await state.get_value("info_msg_id"))
+    await update_menu_text(callback, state)
+    await state.set_state(None)
 
 @router.message(HWStates.waiting_for_startdate)
 async def process_startdate(message: Message, state: FSMContext):
     if validate_date(message.text):
         await state.update_data(created_at=message.text)
         await message.delete()
+        await message.bot.delete_message(message.from_user.id, await state.get_value("info_msg_id"))
         await update_menu_text(message, state)
         await state.set_state(None)
     else:
         temp_msg = await message.answer("❌ НЕПРАВИЛЬНЫЙ ФОРМАТ. Попробуйте снова")
         await message.delete()
+        await message.bot.delete_message(message.from_user.id, await state.get_value("info_msg_id"))
         await state.set_state(None)
         await asyncio.sleep(1)
         await temp_msg.delete()
