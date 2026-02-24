@@ -7,7 +7,7 @@ from aiogram.fsm.state import State, StatesGroup
 import asyncio
 
 from constants import MAIN_MENU_TEXT, OBJECTS, LIST_DZ, LIST_HW_TEXT
-from database import get_active_hws, get_hw_by_id
+from database import get_all_hws, get_hw_by_id
 from keyboards import get_kb_for_hws_with_files
 from .somecoolshit import days_until_deadline
 
@@ -15,7 +15,7 @@ router = Router()
 
 @router.message(F.text == LIST_DZ)
 async def add_hw_init(message: Message):
-    hws = get_active_hws()
+    hws = get_all_hws()
     text = "Для просмотра файлов нажми на кнопку с соответствующим ID\n"
     ids_of_hws_with_files = []
     

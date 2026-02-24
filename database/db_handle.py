@@ -56,6 +56,11 @@ def get_outdated_hws():
     hws = cur.fetchall()
     return hws
 
+def get_all_hws():
+    cur.execute("SELECT * FROM hws")
+    hws = cur.fetchall()
+    return hws
+
 def update_hw(*, hw_id: int, description: str = None, 
             files: list[str] | tuple[str] = None, end_date: str = None, status: str = None) -> bool:
     """
