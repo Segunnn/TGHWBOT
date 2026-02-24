@@ -51,7 +51,7 @@ class DailyPoster:
             try:
                 now = datetime.now(msc_tz)
                 
-                if (now.hour == 18 or last_post_day != now.date) and now.weekday() != 5:
+                if (now.hour == 18 and last_post_day != now.date) and now.weekday() != 5:
                     genocide_outdated_hws()
                     # Проверяем, что сегодня еще не отправляли
                     if last_post_day != now.date():
