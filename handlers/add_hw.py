@@ -105,7 +105,7 @@ async def ask_startdate(callback: CallbackQuery, state: FSMContext):
 @router.callback_query(F.data == "add_hw:startdate:today")
 async def today_startday(callback: CallbackQuery, state: FSMContext):
     await state.update_data(created_at=str(datetime.now().strftime("%d.%m.%y")))
-    await message.bot.delete_message(message.from_user.id, await state.get_value("info_msg_id"))
+    await callback.bot.delete_message(message.from_user.id, await state.get_value("info_msg_id"))
     await update_menu_text(callback, state)
     await state.set_state(None)
 
