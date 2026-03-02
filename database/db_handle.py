@@ -141,7 +141,7 @@ def get_hws_by_object(object_name: str, only_active: bool = True):
 
 class Week:
     def __init__(self) -> None:
-        self.storage_file = 'databse/.week.txt'
+        self.storage_file = 'database/.week.txt'
         self.current_week = self.get_week()
 
     def get_week(self) -> str:
