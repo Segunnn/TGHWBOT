@@ -56,6 +56,10 @@ def get_objects_kb():
 class Calendar:
     def __init__(self, days_per_page: int = 10):
         self.days_per_page = days_per_page
+        self.weekdays = {
+            'Mon': 'Пн', 'Tue': 'Вт', 'Wed': 'Ср',
+            'Thu': 'Чт', 'Fri': 'Пт', 'Sat': 'Сб', 'Sun': 'Вс'
+        }
     
     def _get_month_boundaries(self, date: datetime) -> tuple[datetime, datetime]:
         """Возвращает первый и последний день месяца"""
@@ -86,21 +90,13 @@ class Calendar:
             callback_data="ignore"
         ))
         
-        # Дни недели
-        weekdays = ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вс"]
-        weekday_row = [
-            InlineKeyboardButton(text=day, callback_data="ignore")
-            for day in weekdays
-        ]
-        kb.row(*weekday_row)
-        
         # Кнопки с датами (по 5 в ряд)
         days_row = []
         today = datetime.now().date()
         
         for date in available_days:
             day_num = date.day
-            day_week = date.strftime("%a")  # Пн, Вт и т.д.
+            day_week = self.weekdays[date.strftime("%a")]
             
             # Форматирование
             if date.date() == today:
