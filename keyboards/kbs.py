@@ -3,6 +3,7 @@ from aiogram.utils.keyboard import InlineKeyboardBuilder, InlineKeyboardMarkup
 from constants import ADD_DZ, EDIT_DZ, LIST_DZ, OBJECTS
 
 from datetime import datetime, timedelta
+from calendar import monthrange
 
 def get_start_keyboard():
     """Клавиатура с одной кнопкой"""
