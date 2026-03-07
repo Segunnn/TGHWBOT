@@ -104,7 +104,7 @@ class Calendar:
             
             # Форматирование
             if date.date() == today:
-                button_text = f"📍{day_num}[{kbday_week}]"
+                button_text = f"📍{day_num}[{day_week}]"
             else:
                 button_text = f"{day_num}[{day_week}]"
             
