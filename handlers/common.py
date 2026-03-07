@@ -2,6 +2,9 @@ from aiogram import Router, F, types
 from aiogram.filters import Command
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
+from datetime import datetime
+from keyboards import Calendar
+
 router = Router()
 
 @router.message(Command("zzz"))
@@ -10,12 +13,12 @@ async def cmd_start(message: types.Message):
         await message.answer("Ты не кирилл сорян")
         return 1
 
-    builder = ReplyKeyboardBuilder()
-    builder.row(types.KeyboardButton(text="Основное меню"))
+    cal = Calendar()
+    kb = cal.get_kb_for_next_10_days(datetime.now())
     
     await message.answer(
         "Выбери действие:",
-        reply_markup=builder.as_markup(resize_keyboard=True)
+        reply_markup=kb
     )
 
 # Пример обработки текста с кнопки (Magic Filter - F)
