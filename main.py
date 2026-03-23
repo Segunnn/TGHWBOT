@@ -44,6 +44,7 @@ class DailyPoster:
         """Запускает ежедневную отправку сообщений"""
         self.is_running = True
         last_post_day = None  # Чтобы не отправлять несколько раз в один день
+        week_changed_this_saturday = False
         logging.info("Daily poster is active")
         msc_tz = timezone(timedelta(hours=3))
         
@@ -58,10 +59,12 @@ class DailyPoster:
                         await self.send_daily_message()
                         last_post_day = now.date()
                         logging.info("Ежедневное сообщение было отправлено")
+                        week_changed_this_saturday = False
                 
                 elif now.weekday() == 5:
                     wek = Week()
                     wek.next_week()
+                    week_changed_this_saturday = True
                 
                 await asyncio.sleep(300)
                 
