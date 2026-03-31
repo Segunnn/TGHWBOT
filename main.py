@@ -61,7 +61,7 @@ class DailyPoster:
                         logging.info("Ежедневное сообщение было отправлено")
                         week_changed_this_saturday = False
                 
-                elif now.weekday() == 5:
+                elif now.weekday() == 5 and not week_changed_this_saturday:
                     wek = Week()
                     wek.next_week()
                     week_changed_this_saturday = True
